@@ -1,0 +1,22 @@
+MOV    R0, #6        // op1 = 6 (16-bit)
+MOV    R1, #5        // op2_shifted low = 5
+MOV    R2, #0        // op2_shifted high = 0
+MOV    R3, #0        // sum low = 0
+MOV    R4, #0        // sum high = 0
+MOV    R6, #1        // placeholder for 1 comparison
+MOV    R7, #0        // placeholder for 0 comparison
+
+AND    R5, R0, R6    // R5 = (op1 & 1)
+CMP    R5, #0        // (op1 & 1) = false
+JEQ    2             // Skip summation if criteria not met
+
+ADD    R3, R3, R1    // Low 16 bits, set FLAGC for carry
+ADC    R4, R4, R2    // High 16 bits, plus carry if any
+
+LSL    R1, R1, #1    // Shift low 16 bits left by 1
+ADC    R2, R2, R7    // Shift high 16 bits by 1, plus carry if any
+
+LSR    R0, R0, #1    // Shift op1 right by 1
+
+CMP    R0, #0        // while(op != 0)
+JNE    -9            // restart loop

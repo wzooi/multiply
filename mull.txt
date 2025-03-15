@@ -1,0 +1,18 @@
+MOV    R0, #6        // Line 0: op_1 = 6
+MOV    R1, #5        // Line 1: op_2 = 5
+MOV    R3, #0        // Line 2: sum = 0
+MOV    R2, R1        // Line 3: op2_shifted = op2
+MOV    R5, #1        // Line 4: temp storage of 1 (used for AND masking)
+
+AND    R4, R0, R5    // Line 5: if (op1 & 1), store result in R4
+JNE    2            // Line 6: If R4 != 0, jump to ADD_STEP (Line 8)
+JMP    2            // Line 7: Else skip to SKIP_ADD (Line 9)
+
+ADD    R3, R3, R2    // Line 8: sum += op2_shifted
+
+LSL    R2, R2, #1    // Line 9: op2_shifted = op2_shifted << 1
+LSR    R0, R0, #1    // Line 10: op1 = op1 >> 1
+CMP    R0, #0        // Line 11: Check if op1 == 0
+JNE    -7            // Line 12: If op1 != 0, jump back to LOOP_START (Line 5)
+
+RET                  // Line 13: Return when loop is done
